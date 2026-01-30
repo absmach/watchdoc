@@ -63,7 +63,7 @@ go install github.com/absmach/watchdoc@main
     Groups rapid file changes into a single rebuild and reload.
 
 -   **Zero configuration**\
-    Sensible defaults---just run it and go.
+    Sensible defaults. Just run it and go.
 
 ------------------------------------------------------------------------
 
