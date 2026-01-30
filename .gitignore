@@ -1,0 +1,7 @@
+watchdoc
+watchdoc.exe
+*.test
+*.out
+coverage.txt
+*.swp
+*~
