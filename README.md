@@ -37,8 +37,8 @@ curl -fsSL https://raw.githubusercontent.com/absmach/watchdoc/main/install.sh | 
 
 If you are using Go, you can also install it with:
 ```bash
- go install github.com/absmach/watchdoc@main
- ```
+go install github.com/absmach/watchdoc@main
+```
 
 ------------------------------------------------------------------------
 
