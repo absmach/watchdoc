@@ -1,4 +1,9 @@
 # WatchDoc 📄👀
+
+[![CI](https://github.com/absmach/watchdoc/actions/workflows/build.yml/badge.svg)](https://github.com/absmach/watchdoc/actions/workflows/build.yml)
+[![Go Report Card](https://goreportcard.com/badge/github.com/absmach/watchdoc)](https://goreportcard.com/report/github.com/absmach/watchdoc)
+[![Go Reference](https://pkg.go.dev/badge/github.com/absmach/watchdoc.svg)](https://pkg.go.dev/github.com/absmach/watchdoc)
+
 ![Alt text](img.png)
 
 **WatchDoc** is a lightweight file server with live reload,
