@@ -19,9 +19,9 @@ jobs:
         with:
           go-version-file: go.mod
       - name: Lint
-        uses: golangci/golangci-lint-action@v6
+        uses: golangci/golangci-lint-action@v9
         with:
-          version: latest
+          version: v2.8
       - run: go test -race -v ./...
 
   build:
