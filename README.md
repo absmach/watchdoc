@@ -1,4 +1,4 @@
-# WatchDoc 📄⚡
+# WatchDoc 📄👀
 ![Alt text](img.png)
 
 **WatchDoc** is a lightweight development file server with live reload,
@@ -60,10 +60,10 @@ make build
 watchdoc
 
 # Serve a specific directory
-watchdoc -dir ./build/output
+watchdoc -serve-dir ./build/output
 
 # Run a build command when source files change
-watchdoc -dir ./output -watch-dirs ./src -cmd "make build-docs"
+watchdoc -serve-dir ./output -watch-dirs ./src -cmd "make build-docs"
 
 # Use a custom port
 watchdoc -port 3000
@@ -72,7 +72,7 @@ watchdoc -port 3000
 # watch sources → run build → serve output → live reload
 watchdoc \
   -port 8080 \
-  -dir ./site \
+  -serve-dir ./site \
   -watch-dirs ./docs,./templates \
   -cmd "make generate"
 ```
@@ -85,7 +85,7 @@ watchdoc \
 | Flag          | Default | Description                                     |
 | ------------- | ------- | ----------------------------------------------- |
 | `-port`       | `8080`  | Port to run the file server on                  |
-| `-dir`        | `.`     | Directory to serve files from                   |
+| `-serve-dir`  | `.`     | Directory to serve files from                   |
 | `-watch-dirs` |         | Additional comma-separated directories to watch |
 | `-cmd`        |         | Command to execute when source files change     |
 

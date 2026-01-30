@@ -12,8 +12,8 @@ import (
 
 func main() {
 	p := flag.String("port", "8080", "port to run the file server on")
-	dir := flag.String("dir", "", "directory to serve files from (default: smart detection)")
-	extraDirs := flag.String("watch-dirs", "", "additional comma-separated directories to watch")
+	dir := flag.String("serve-dir", "", "directory to serve files from (default: current directory)")
+	watchDirs := flag.String("watch-dirs", "", "additional comma-separated directories to watch")
 	cmd := flag.String("cmd", "", "command to execute on file change")
 	flag.Parse()
 
@@ -34,12 +34,12 @@ func main() {
 	if *cmd != "" {
 		log.Printf("Command: %s", *cmd)
 	}
-	if *extraDirs != "" {
-		log.Printf("Watching directories: %s", strings.Join([]string{absPath, *extraDirs}, ","))
+	if *watchDirs != "" {
+		log.Printf("Watching directories: %s", strings.Join([]string{absPath, *watchDirs}, ","))
 	}
 	log.Printf("Serving from: %s", absPath)
 
-	watchList, extrasList := resolveWatchDirs(*extraDirs, absPath)
+	watchList, extrasList := resolveWatchDirs(*watchDirs, absPath)
 	go watchFiles(watchList, extrasList, *cmd, absPath)
 
 	http.HandleFunc("/ws", handleWebSocket)
