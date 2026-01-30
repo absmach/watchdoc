@@ -1,12 +1,32 @@
 # WatchDoc 📄👀
 ![Alt text](img.png)
 
-**WatchDoc** is a lightweight development file server with live reload,
+**WatchDoc** is a lightweight file server with live reload,
 built for fast documentation and static-site workflows.
 
 It watches your files for changes, optionally runs a build command, and
-automatically reloads all connected browsers via WebSocket---so you can
+automatically reloads all connected browsers via WebSocket-so you can
 focus on writing, not refreshing.
+
+This started as an internal tool used for building our website at https://absmach.eu/,
+but it can be used as a general-purpose file server in similar scenarios. If you have
+custom build scripts, but you also want to watch changes, trigger rebuild between source
+and compiled files, and observe changes in the opened browser, this is a tool for you.
+All you need to do is to configure three parameters:
+- source dir to watch for changes
+- destination dir to serve and watch for for browser refresh
+- command used to trigger rebuild
+
+Or, you can just use it as a simple and 0-dependency file server (no npm, no heavy dependencies).
+You can install it via:
+```bash
+curl -fsSL https://raw.githubusercontent.com/absmach/watchdoc/main/install.sh | sh
+```
+or with a custom location:
+```bash
+INSTALL_DIR=$HOME/.local/bin \
+curl -fsSL https://raw.githubusercontent.com/absmach/watchdoc/main/install.sh | sh
+```
 
 ------------------------------------------------------------------------
 
@@ -77,20 +97,21 @@ watchdoc \
   -cmd "make generate"
 ```
 
-We use WatchDoc as a local file server and also to watch another source director and 
-trigger rebuild on changes here https://github.com/absmach/website/blob/main/Makefile#L23
+We use WatchDoc as a local file server and also to watch our blogs directory and 
+trigger rebuild on changes [here](https://github.com/absmach/website/blob/main/Makefile#L23)
+so we can focus on writing blogs and editing website, rather than refreshing and rebuilding.
 
 ---
 
 ## ⚙️ Flags
 
  
-| Flag          | Default | Description                                     |
-| ------------- | ------- | ----------------------------------------------- |
-| `-port`       | `8080`  | Port to run the file server on                  |
-| `-serve-dir`  | `.`     | Directory to serve files from                   |
-| `-watch-dirs` |         | Additional comma-separated directories to watch |
-| `-cmd`        |         | Command to execute when source files change     |
+| Flag          | Default | Description                                                          |
+| ------------- | ------- | -------------------------------------------------------------------- |
+| `-port`       | `8080`  | Port to run the file server on                                       |
+| `-serve-dir`  | `.`     | Directory to serve files from, this is usually your built HTML files |
+| `-watch-dirs` |         | Comma-separated directories for files to watch for changes           |
+| `-cmd`        |         | Command to execute when source files change                          |
 
 ## 🧠 How It Works
 
