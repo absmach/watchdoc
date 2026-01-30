@@ -125,7 +125,7 @@ so we can focus on writing blogs and editing the website, rather than refreshing
 | `-watch-dirs` |         | Comma-separated directories for files to watch for changes           |
 | `-cmd`        |         | Command to execute when source files change                          |
 
-## 🧠 How It Works
+## ❓ How It Works
 
 1.  WatchDoc starts an HTTP file server for the selected output
     directory.
@@ -138,7 +138,7 @@ so we can focus on writing blogs and editing the website, rather than refreshing
 5.  When files in the **served directory** change, all connected
     browsers receive a reload signal.
 
-This two-stage flow:
+This flow:
 
     source → build → output → reload
 
