@@ -5,19 +5,21 @@
 built for fast documentation and static-site workflows.
 
 It watches your files for changes, optionally runs a build command, and
-automatically reloads all connected browsers via WebSocket-so you can
+automatically reloads all connected browsers via WebSocket, so you can
 focus on writing, not refreshing.
 
 This started as an internal tool used for building our website at https://absmach.eu/,
-but it can be used as a general-purpose file server in similar scenarios. If you have
-custom build scripts, but you also want to watch changes, trigger rebuild between source
-and compiled files, and observe changes in the opened browser, this is a tool for you.
+but it can be used as a general-purpose file server in similar scenarios.
+If you have custom build scripts but also want to watch changes, trigger
+rebuilds between source and compiled files, and observe updates in the browser,
+this is the tool for you.
+
 All you need to do is to configure three parameters:
 - source dir to watch for changes
-- destination dir to serve and watch for for browser refresh
+- destination dir to serve and watch for browser refresh
 - command used to trigger rebuild
 
-Or, you can just use it as a simple and 0-dependency file server (no npm, no heavy dependencies).
+Or, you can just use it as a simple and zero-dependency file server (no npm, no heavy dependencies).
 You can install it via:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/absmach/watchdoc/main/install.sh | sh
@@ -99,7 +101,7 @@ watchdoc \
 
 We use WatchDoc as a local file server and also to watch our blogs directory and 
 trigger rebuild on changes [here](https://github.com/absmach/website/blob/main/Makefile#L23)
-so we can focus on writing blogs and editing website, rather than refreshing and rebuilding.
+so we can focus on writing blogs and editing the website, rather than refreshing and rebuilding.
 
 ---
 
