@@ -77,6 +77,9 @@ watchdoc \
   -cmd "make generate"
 ```
 
+We use WatchDoc as a local file server and also to watch another source director and 
+trigger rebuild on changes here https://github.com/absmach/website/blob/main/Makefile#L23
+
 ---
 
 ## ⚙️ Flags
