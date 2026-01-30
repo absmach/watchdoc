@@ -30,6 +30,11 @@ INSTALL_DIR=$HOME/.local/bin \
 curl -fsSL https://raw.githubusercontent.com/absmach/watchdoc/main/install.sh | sh
 ```
 
+If you are using Go, you can also install it with:
+```bash
+ go install github.com/absmach/watchdoc@main
+ ```
+
 ------------------------------------------------------------------------
 
 ## ✨ Features
