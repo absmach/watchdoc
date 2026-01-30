@@ -18,7 +18,10 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
-      - run: go vet ./...
+      - name: Lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
       - run: go test -race -v ./...
 
   build:

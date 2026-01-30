@@ -128,7 +128,7 @@ func TestHandleWebSocket(t *testing.T) {
 		t.Errorf("expected 1 client, got %d", count)
 	}
 
-	conn.Close()
+	_ = conn.Close()
 
 	// Give server time to deregister
 	time.Sleep(50 * time.Millisecond)
@@ -155,13 +155,13 @@ func TestNotifyClients(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed to connect: %v", err)
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	time.Sleep(50 * time.Millisecond)
 
 	notifyClients()
 
-	conn.SetReadDeadline(time.Now().Add(time.Second))
+	_ = conn.SetReadDeadline(time.Now().Add(time.Second))
 	_, msg, err := conn.ReadMessage()
 	if err != nil {
 		t.Fatalf("failed to read message: %v", err)

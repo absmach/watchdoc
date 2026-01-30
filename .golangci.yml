@@ -1,0 +1,21 @@
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  enable:
+    - errcheck
+    - govet
+    - staticcheck
+    - unused
+    - ineffassign
+    - gocritic
+    - revive
+    - gosec
+    - misspell
+    - prealloc
+
+formatters:
+  enable:
+    - gofmt

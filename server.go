@@ -11,7 +11,7 @@ import (
 
 var (
 	upgrader = websocket.Upgrader{
-		CheckOrigin: func(r *http.Request) bool {
+		CheckOrigin: func(_ *http.Request) bool {
 			return true
 		},
 	}
@@ -51,7 +51,7 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 		log.Printf("WebSocket upgrade error: %v", err)
 		return
 	}
-	defer conn.Close()
+	defer func() { _ = conn.Close() }()
 
 	clientsMu.Lock()
 	clients[conn] = true
@@ -78,7 +78,7 @@ func notifyClients() {
 	for conn := range clients {
 		if err := conn.WriteMessage(websocket.TextMessage, []byte("reload")); err != nil {
 			log.Printf("Error notifying client: %v", err)
-			conn.Close()
+			_ = conn.Close()
 			delete(clients, conn)
 		}
 	}

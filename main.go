@@ -1,3 +1,4 @@
+// Package main provides WatchDoc, a live-reload development server.
 package main
 
 import (
@@ -6,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -48,7 +50,11 @@ func main() {
 		fileServer.ServeHTTP(injector, r)
 	})
 
-	if err := http.ListenAndServe(":"+port, nil); err != nil {
+	srv := &http.Server{
+		Addr:              ":" + port,
+		ReadHeaderTimeout: 10 * time.Second,
+	}
+	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }

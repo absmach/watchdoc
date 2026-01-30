@@ -68,12 +68,12 @@ func TestResolveWatchDirs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer os.RemoveAll(dir1)
+		defer func() { _ = os.RemoveAll(dir1) }()
 		dir2, err := os.MkdirTemp("", "wd2")
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer os.RemoveAll(dir2)
+		defer func() { _ = os.RemoveAll(dir2) }()
 
 		watchList, extrasList := resolveWatchDirs(dir1+","+dir2, base)
 		if len(watchList) != 3 {
@@ -89,7 +89,7 @@ func TestResolveWatchDirs(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		defer os.RemoveAll(dir)
+		defer func() { _ = os.RemoveAll(dir) }()
 
 		watchList, _ := resolveWatchDirs("  "+dir+" , , ", base)
 		if len(watchList) != 2 {

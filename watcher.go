@@ -70,7 +70,7 @@ func watchFiles(watchDirs []string, sourceDirs []string, cmdStr string, servedDi
 	if err != nil {
 		log.Fatal(err)
 	}
-	defer watcher.Close()
+	defer func() { _ = watcher.Close() }()
 
 	for _, dir := range watchDirs {
 		absDir, err := filepath.Abs(dir)
