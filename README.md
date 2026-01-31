@@ -24,7 +24,9 @@ All you need to do is to configure three parameters:
 - destination dir to serve and watch for browser refresh
 - command used to trigger rebuild
 
-Or, you can just use it as a simple and zero-dependency file server (no npm, no heavy dependencies).
+The only difference between the source and destination dirs is that destination
+dir changes do not trigger the command.
+Or, you can just use it as a fast and simple zero-dependency file server (no npm, no heavy dependencies).
 You can install it via:
 ```bash
 curl -fsSL https://raw.githubusercontent.com/absmach/watchdoc/main/install.sh | sh
