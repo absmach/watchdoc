@@ -39,8 +39,8 @@ func main() {
 	}
 	log.Printf("Serving from: %s", absPath)
 
-	watchList, extrasList := resolveWatchDirs(*watchDirs, absPath)
-	go watchFiles(watchList, extrasList, *cmd, absPath)
+	serveList, watchList := resolveWatchDirs(*watchDirs, absPath)
+	go watchFiles(serveList, watchList, *cmd, absPath)
 
 	http.HandleFunc("/ws", handleWebSocket)
 

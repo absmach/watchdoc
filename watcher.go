@@ -29,14 +29,14 @@ func isSkippedDir(path string) bool {
 	return false
 }
 
-func resolveWatchDirs(extraDirs string, basePath string) (watchList, extrasList []string) {
-	watchList = []string{basePath}
+func resolveWatchDirs(watchDirs string, basePath string) (serveList, watchList []string) {
+	serveList = []string{basePath}
 
-	if extraDirs == "" {
-		return watchList, nil
+	if watchDirs == "" {
+		return serveList, nil
 	}
 
-	for _, e := range strings.Split(extraDirs, ",") {
+	for _, e := range strings.Split(watchDirs, ",") {
 		e = strings.TrimSpace(e)
 		if e == "" {
 			continue
@@ -46,10 +46,10 @@ func resolveWatchDirs(extraDirs string, basePath string) (watchList, extrasList 
 			log.Printf("Warning: Skipping invalid watch dir %s: %v", e, err)
 			continue
 		}
-		extrasList = append(extrasList, absExtra)
 		watchList = append(watchList, absExtra)
+		serveList = append(serveList, absExtra)
 	}
-	return watchList, extrasList
+	return serveList, watchList
 }
 
 func isSourceFile(absPath string, sourceDirs []string) bool {
@@ -65,14 +65,14 @@ func isOutputFile(absPath string, servedDir string) bool {
 	return strings.HasPrefix(absPath, servedDir)
 }
 
-func watchFiles(watchDirs []string, sourceDirs []string, cmdStr string, servedDir string) {
+func watchFiles(serveDirs, watchDirs []string, cmdStr, servedDir string) {
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer func() { _ = watcher.Close() }()
 
-	for _, dir := range watchDirs {
+	for _, dir := range serveDirs {
 		absDir, err := filepath.Abs(dir)
 		if err != nil {
 			log.Printf("Warning: couldn't resolve path %s: %v", dir, err)
@@ -121,7 +121,7 @@ func watchFiles(watchDirs []string, sourceDirs []string, cmdStr string, servedDi
 					absEventPath = event.Name
 				}
 
-				isSource := isSourceFile(absEventPath, sourceDirs)
+				isSource := isSourceFile(absEventPath, watchDirs)
 				isOutput := isOutputFile(absEventPath, servedDir)
 
 				if timer != nil {
