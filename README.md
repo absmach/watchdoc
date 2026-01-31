@@ -124,6 +124,7 @@ so we can focus on writing blogs and editing the website, rather than refreshing
 | `-serve-dir`  | `.`     | Directory to serve files from, this is usually your built HTML files |
 | `-watch-dirs` |         | Comma-separated directories for files to watch for changes           |
 | `-cmd`        |         | Command to execute when source files change                          |
+| `-no-browser` | `false` | Disable automatic browser opening                                    |
 
 ## ❓ How It Works
 

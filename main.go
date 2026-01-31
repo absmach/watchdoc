@@ -8,6 +8,8 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/skratchdot/open-golang/open"
 )
 
 func main() {
@@ -15,6 +17,7 @@ func main() {
 	dir := flag.String("serve-dir", "", "directory to serve files from (default: current directory)")
 	watchDirs := flag.String("watch-dirs", "", "additional comma-separated directories to watch")
 	cmd := flag.String("cmd", "", "command to execute on file change")
+	noBrowser := flag.Bool("no-browser", false, "disable automatic browser opening")
 	flag.Parse()
 
 	port := *p
@@ -54,6 +57,15 @@ func main() {
 		Addr:              ":" + port,
 		ReadHeaderTimeout: 10 * time.Second,
 	}
+
+	if !*noBrowser {
+		go func() {
+			if err := open.Start("http://localhost:" + port); err != nil {
+				log.Printf("Failed to open browser: %v", err)
+			}
+		}()
+	}
+
 	if err := srv.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
