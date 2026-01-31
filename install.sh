@@ -11,7 +11,13 @@ error() { printf "[ERROR] %s\n" "$1" >&2; exit 1; }
 # ---- OS detection -----------------------------------------------------------
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 case "$OS" in
-  linux|darwin) ;;
+  linux|darwin)
+    EXE_SUFFIX=""
+    ;;
+  mingw*|msys*|cygwin*)
+    OS="windows"
+    EXE_SUFFIX=".exe"
+    ;;
   *)
     error "Unsupported OS: $OS"
     ;;
@@ -27,7 +33,7 @@ case "$ARCH" in
     ;;
 esac
 
-ASSET="${BINARY_NAME}-${OS}-${ARCH}"
+ASSET="${BINARY_NAME}-${OS}-${ARCH}${EXE_SUFFIX}"
 URL="https://github.com/${REPO}/releases/latest/download/${ASSET}"
 
 info "Installing ${BINARY_NAME}"
@@ -42,12 +48,13 @@ curl -fL "$URL" -o "$TMP" || error "Download failed"
 chmod +x "$TMP"
 
 # ---- Install ---------------------------------------------------------------
+INSTALL_PATH="${INSTALL_DIR}/${BINARY_NAME}${EXE_SUFFIX}"
 if [ ! -w "$INSTALL_DIR" ]; then
-  info "Installing to ${INSTALL_DIR} (requires sudo)"
-  sudo mv "$TMP" "${INSTALL_DIR}/${BINARY_NAME}"
+  info "Installing to ${INSTALL_PATH} (requires sudo)"
+  sudo mv "$TMP" "$INSTALL_PATH"
 else
-  mv "$TMP" "${INSTALL_DIR}/${BINARY_NAME}"
+  mv "$TMP" "$INSTALL_PATH"
 fi
 
-info "Installed to ${INSTALL_DIR}/${BINARY_NAME}"
+info "Installed to ${INSTALL_PATH}"
 info "Run '${BINARY_NAME} --help' to get started"
