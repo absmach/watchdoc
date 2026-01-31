@@ -55,9 +55,8 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 	clientsMu.Lock()
 	clients[conn] = true
-	clientsMu.Unlock()
-
 	log.Printf("Browser connected (total: %d)", len(clients))
+	clientsMu.Unlock()
 
 	for {
 		if _, _, err := conn.ReadMessage(); err != nil {
@@ -67,8 +66,8 @@ func handleWebSocket(w http.ResponseWriter, r *http.Request) {
 
 	clientsMu.Lock()
 	delete(clients, conn)
-	clientsMu.Unlock()
 	log.Printf("Browser disconnected (total: %d)", len(clients))
+	clientsMu.Unlock()
 }
 
 func notifyClients() {
