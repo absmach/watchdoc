@@ -2,9 +2,13 @@
 package main
 
 import (
+	"errors"
 	"flag"
+	"fmt"
+	"io"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -12,55 +16,80 @@ import (
 	"github.com/skratchdot/open-golang/open"
 )
 
-func main() {
-	p := flag.String("port", "8080", "port to run the file server on")
-	dir := flag.String("serve-dir", "", "directory to serve files from (default: current directory)")
-	watchDirs := flag.String("watch-dirs", "", "additional comma-separated directories to watch")
-	cmd := flag.String("cmd", "", "command to execute on file change")
-	noBrowser := flag.Bool("no-browser", false, "disable automatic browser opening")
-	flag.Parse()
+type options struct {
+	port      string
+	serveDir  string
+	watchDirs string
+	cmd       string
+	noBrowser bool
+}
 
-	port := *p
-	serveDir := *dir
+func parseOptions(args []string, output io.Writer) (options, error) {
+	var opts options
+	flags := flag.NewFlagSet("watchdoc", flag.ContinueOnError)
+	flags.SetOutput(output)
+	flags.StringVar(&opts.port, "port", "8080", "port to run the file server on")
+	flags.StringVar(&opts.serveDir, "serve-dir", ".", "directory to serve files from")
+	flags.StringVar(&opts.watchDirs, "watch-dirs", "", "additional comma-separated directories to watch")
+	flags.StringVar(&opts.cmd, "cmd", "", "command to execute on file change")
+	flags.BoolVar(&opts.noBrowser, "no-browser", false, "disable automatic browser opening")
 
-	if serveDir == "" {
-		serveDir = "."
+	if err := flags.Parse(args); err != nil {
+		return options{}, err
+	}
+	if flags.NArg() != 0 {
+		return options{}, fmt.Errorf(
+			"unexpected positional arguments: %q; boolean flags take no spaced value (use -no-browser or -no-browser=true)",
+			strings.Join(flags.Args(), " "),
+		)
 	}
 
-	absPath, err := filepath.Abs(serveDir)
+	return opts, nil
+}
+
+func main() {
+	opts, err := parseOptions(os.Args[1:], os.Stderr)
+	if errors.Is(err, flag.ErrHelp) {
+		return
+	}
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	log.Printf("File server started at port %s", port)
-	log.Printf("Open your browser at http://localhost:%s", port)
-	if *cmd != "" {
-		log.Printf("Command: %s", *cmd)
+	absPath, err := filepath.Abs(opts.serveDir)
+	if err != nil {
+		log.Fatal(err)
 	}
-	if *watchDirs != "" {
-		log.Printf("Watching directories: %s", strings.Join([]string{absPath, *watchDirs}, ","))
+
+	log.Printf("File server started at port %s", opts.port)
+	log.Printf("Open your browser at http://localhost:%s", opts.port)
+	if opts.cmd != "" {
+		log.Printf("Command: %s", opts.cmd)
+	}
+	if opts.watchDirs != "" {
+		log.Printf("Watching directories: %s", strings.Join([]string{absPath, opts.watchDirs}, ","))
 	}
 	log.Printf("Serving from: %s", absPath)
 
-	serveList, watchList := resolveWatchDirs(*watchDirs, absPath)
-	go watchFiles(serveList, watchList, *cmd, absPath)
+	serveList, watchList := resolveWatchDirs(opts.watchDirs, absPath)
+	go watchFiles(serveList, watchList, opts.cmd, absPath)
 
 	http.HandleFunc("/ws", handleWebSocket)
 
-	fileServer := http.FileServer(http.Dir(serveDir))
+	fileServer := http.FileServer(http.Dir(opts.serveDir))
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		injector := &liveReloadInjector{ResponseWriter: w}
 		fileServer.ServeHTTP(injector, r)
 	})
 
 	srv := &http.Server{
-		Addr:              ":" + port,
+		Addr:              ":" + opts.port,
 		ReadHeaderTimeout: 10 * time.Second,
 	}
 
-	if !*noBrowser {
+	if !opts.noBrowser {
 		go func() {
-			if err := open.Start("http://localhost:" + port); err != nil {
+			if err := open.Start("http://localhost:" + opts.port); err != nil {
 				log.Printf("Failed to open browser: %v", err)
 			}
 		}()

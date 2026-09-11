@@ -102,6 +102,9 @@ watchdoc -serve-dir ./output -watch-dirs ./src -cmd "make build-docs"
 # Use a custom port
 watchdoc -port 3000
 
+# Disable automatic browser opening (boolean flags take no spaced value)
+watchdoc -no-browser
+
 # Full example:
 # watch sources → run build → serve output → live reload
 watchdoc \
@@ -127,6 +130,16 @@ so we can focus on writing blogs and editing the website, rather than refreshing
 | `-watch-dirs` |         | Comma-separated directories for files to watch for changes           |
 | `-cmd`        |         | Command to execute when source files change                          |
 | `-no-browser` | `false` | Disable automatic browser opening                                    |
+
+Boolean flags use `-no-browser` or `-no-browser=true`, not
+`-no-browser true`.
+
+On Windows, build commands are run with `cmd.exe /C`, so batch files can be
+used directly:
+
+``` powershell
+watchdoc.exe -no-browser -watch-dirs ./content -serve-dir ./out -cmd "./build.bat"
+```
 
 ## ❓ How It Works
 

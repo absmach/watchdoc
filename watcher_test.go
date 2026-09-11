@@ -160,3 +160,39 @@ func TestIsTempFile_WithPath(t *testing.T) {
 		})
 	}
 }
+
+func TestShellCommand(t *testing.T) {
+	tests := []struct {
+		name     string
+		goos     string
+		command  string
+		wantArgs []string
+	}{
+		{
+			name:     "windows batch command",
+			goos:     "windows",
+			command:  `./build.bat`,
+			wantArgs: []string{"cmd.exe", "/C", `./build.bat`},
+		},
+		{
+			name:     "unix shell command",
+			goos:     "linux",
+			command:  "make build-docs",
+			wantArgs: []string{"sh", "-c", "make build-docs"},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			gotArgs := shellCommand(tt.command, tt.goos).Args
+			if len(gotArgs) != len(tt.wantArgs) {
+				t.Fatalf("shellCommand() args = %q, want %q", gotArgs, tt.wantArgs)
+			}
+			for i := range gotArgs {
+				if gotArgs[i] != tt.wantArgs[i] {
+					t.Errorf("shellCommand() args = %q, want %q", gotArgs, tt.wantArgs)
+				}
+			}
+		})
+	}
+}

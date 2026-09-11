@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
 
@@ -12,6 +13,13 @@ import (
 )
 
 var skippedDirs = []string{".git", "node_modules", "vendor"}
+
+func shellCommand(command, goos string) *exec.Cmd {
+	if goos == "windows" {
+		return exec.Command("cmd.exe", "/C", command) // #nosec G204 -- command execution is the purpose of -cmd.
+	}
+	return exec.Command("sh", "-c", command) // #nosec G204 -- command execution is the purpose of -cmd.
+}
 
 func isTempFile(name string) bool {
 	base := filepath.Base(name)
@@ -130,7 +138,7 @@ func watchFiles(serveDirs, watchDirs []string, cmdStr, servedDir string) {
 				timer = time.AfterFunc(200*time.Millisecond, func() {
 					if isSource && cmdStr != "" {
 						log.Printf("Executing command: %s", cmdStr)
-						cmd := exec.Command("sh", "-c", cmdStr)
+						cmd := shellCommand(cmdStr, runtime.GOOS)
 						cmd.Stdout = os.Stdout
 						cmd.Stderr = os.Stderr
 						if err := cmd.Run(); err != nil {
